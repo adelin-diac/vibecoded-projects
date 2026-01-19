@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraction Friends</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #FFF8F0;
+            --bg-soft: #FFFCF7;
+            --primary-coral: #FF6B6B;
+            --primary-mint: #4ECDC4;
+            --primary-sunny: #FFE66D;
+            --primary-lavender: #A29BFE;
+            --primary-peach: #FFEAA7;
+            --text-dark: #2D3436;
+            --text-soft: #636E72;
+            --shadow-soft: rgba(45, 52, 54, 0.08);
+            --shadow-medium: rgba(45, 52, 54, 0.12);
+            --radius-xl: 32px;
+            --radius-lg: 24px;
+            --radius-md: 16px;
+            --radius-sm: 12px;
+            --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg-cream);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Animated background blobs */
+        .bg-decoration {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary-coral);
+            top: -100px;
+            left: -100px;
+            animation-delay: 0s;
+        }
+
+        .blob-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--primary-mint);
+            top: 50%;
+            right: -50px;
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            width: 350px;
+            height: 350px;
+            background: var(--primary-lavender);
+            bottom: -100px;
+            left: 30%;
+            animation-delay: -10s;
+        }
+
+        .blob-4 {
+            width: 250px;
+            height: 250px;
+            background: var(--primary-sunny);
+            top: 30%;
+            left: 20%;
+            animation-delay: -15s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            25% { transform: translate(30px, -30px) scale(1.05); }
+            50% { transform: translate(-20px, 20px) scale(0.95); }
+            75% { transform: translate(20px, 30px) scale(1.02); }
+        }
+
+        /* Main container */
+        .app {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+            animation: slideDown 0.8s var(--transition-smooth);
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 8px;
+        }
+
+        .logo-icon {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--primary-coral), var(--primary-lavender));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            box-shadow: 0 8px 32px var(--shadow-medium);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(32px, 6vw, 56px);
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: clamp(14px, 2.5vw, 18px);
+            color: var(--text-soft);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        /* Main content */
+        .main-content {
+            flex: 1;
+            display: grid;
+            gap: 24px;
+            animation: fadeIn 1s var(--transition-smooth) 0.3s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Input section */
+        .input-section {
+            background: var(--bg-soft);
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            box-shadow: 0 4px 24px var(--shadow-soft);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .fractions-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .fraction-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: 0 4px 16px var(--shadow-soft);
+            transition: all 0.3s var(--transition-smooth);
+            border: 3px solid transparent;
+        }
+
+        .fraction-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 32px var(--shadow-medium);
+        }
+
+        .fraction-card.coral {
+            border-color: var(--primary-coral);
+        }
+
+        .fraction-card.mint {
+            border-color: var(--primary-mint);
+        }
+
+        .fraction-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .fraction-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            color: white;
+        }
+
+        .fraction-badge.coral {
+            background: var(--primary-coral);
+        }
+
+        .fraction-badge.mint {
+            background: var(--primary-mint);
+        }
+
+        .fraction-title {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .fraction-inputs {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .input-label {
+            position: absolute;
+            top: -8px;
+            left: 16px;
+            background: white;
+            padding: 0 8px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-soft);
+            z-index: 1;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 20px;
+            border: 3px solid #E8E8E8;
+            border-radius: var(--radius-md);
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(28px, 5vw, 40px);
+            font-weight: 600;
+            text-align: center;
+            color: var(--text-dark);
+            background: white;
+            transition: all 0.3s var(--transition-smooth);
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary-lavender);
+            box-shadow: 0 0 0 4px rgba(162, 155, 254, 0.2);
+        }
+
+        .fraction-line {
+            width: 80%;
+            height: 6px;
+            background: linear-gradient(90deg, var(--primary-coral), var(--primary-lavender));
+            border-radius: 3px;
+            margin: 4px 0;
+        }
+
+        .vs-badge {
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--primary-sunny), var(--primary-peach));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            box-shadow: 0 4px 16px var(--shadow-soft);
+            flex-shrink: 0;
+        }
+
+        /* Toggle button */
+        .toggle-section {
+            display: flex;
+            justify-content: center;
+            margin-top: 24px;
+        }
+
+        .toggle-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 32px;
+            background: white;
+            border: 3px solid #E8E8E8;
+            border-radius: 100px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: all 0.3s var(--transition-smooth);
+        }
+
+        .toggle-btn:hover {
+            border-color: var(--primary-lavender);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--shadow-soft);
+        }
+
+        .toggle-btn.active {
+            background: linear-gradient(135deg, var(--primary-lavender), var(--primary-coral));
+            border-color: transparent;
+            color: white;
+        }
+
+        .toggle-icon {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s var(--transition-smooth);
+        }
+
+        .toggle-btn.active .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        /* Visualization section */
+        .visualization-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .viz-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            box-shadow: 0 4px 24px var(--shadow-soft);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: all 0.4s var(--transition-smooth);
+        }
+
+        .viz-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 12px 48px var(--shadow-medium);
+        }
+
+        .canvas-container {
+            position: relative;
+            width: 100%;
+            max-width: 300px;
+            aspect-ratio: 1;
+            margin-bottom: 24px;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: var(--radius-lg);
+        }
+
+        .viz-info {
+            text-align: center;
+        }
+
+        .fraction-display {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(36px, 6vw, 56px);
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .percentage-display {
+            font-family: 'Nunito', sans-serif;
+            font-size: clamp(18px, 3vw, 24px);
+            font-weight: 700;
+            color: var(--text-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .percentage-bar {
+            width: 120px;
+            height: 8px;
+            background: #E8E8E8;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .percentage-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.5s var(--transition-smooth);
+        }
+
+        .percentage-fill.coral {
+            background: var(--primary-coral);
+        }
+
+        .percentage-fill.mint {
+            background: var(--primary-mint);
+        }
+
+        /* Overlap mode */
+        .overlap-section {
+            display: none;
+            grid-column: 1 / -1;
+        }
+
+        .overlap-section.show {
+            display: block;
+        }
+
+        .overlap-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 40px;
+            box-shadow: 0 4px 24px var(--shadow-soft);
+            text-align: center;
+        }
+
+        .overlap-canvas-container {
+            max-width: 400px;
+            aspect-ratio: 1;
+            margin: 0 auto 24px;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 32px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Nunito', sans-serif;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-dark);
+        }
+
+        .legend-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .legend-dot.coral {
+            background: var(--primary-coral);
+        }
+
+        .legend-dot.mint {
+            background: var(--primary-mint);
+        }
+
+        .legend-dot.overlap {
+            background: linear-gradient(135deg, var(--primary-coral), var(--primary-mint));
+        }
+
+        /* Result message */
+        .result-section {
+            grid-column: 1 / -1;
+        }
+
+        .result-card {
+            padding: 24px 32px;
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            transition: all 0.5s var(--transition-smooth);
+        }
+
+        .result-card.equal {
+            background: linear-gradient(135deg, #D4EDDA, #C3E6CB);
+            border: 3px solid #28A745;
+        }
+
+        .result-card.not-equal {
+            background: linear-gradient(135deg, var(--primary-peach), var(--primary-sunny));
+            border: 3px solid #F39C12;
+        }
+
+        .result-card.error {
+            background: linear-gradient(135deg, #F8D7DA, #F5C6CB);
+            border: 3px solid #DC3545;
+        }
+
+        .result-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+
+        .result-card.equal .result-icon {
+            background: #28A745;
+        }
+
+        .result-card.not-equal .result-icon {
+            background: #F39C12;
+        }
+
+        .result-card.error .result-icon {
+            background: #DC3545;
+        }
+
+        .result-text {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(20px, 4vw, 28px);
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        /* Hide visualization in overlap mode */
+        .visualization-section.hidden {
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .fractions-row {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .vs-badge {
+                margin: 8px auto;
+            }
+
+            .visualization-section {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .app {
+                padding: 16px;
+            }
+
+            .input-section,
+            .viz-card,
+            .overlap-card {
+                padding: 20px;
+            }
+
+            .fraction-card {
+                padding: 16px;
+            }
+
+            .logo-icon {
+                width: 48px;
+                height: 48px;
+                font-size: 24px;
+            }
+
+            .result-card {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
+        /* Fun hover effects for inputs */
+        .fraction-card:has(input:focus) {
+            transform: translateY(-4px) scale(1.02);
+        }
+
+        /* Confetti animation for equal fractions */
+        @keyframes confetti {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(720deg); opacity: 0; }
+        }
+
+        .confetti-piece {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--primary-coral);
+            animation: confetti 1s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-decoration">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div class="blob blob-4"></div>
+    </div>
+
+    <div class="app">
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon">🥧</div>
+                <h1>Fraction Friends</h1>
+            </div>
+            <p class="subtitle">Compare fractions and see which piece of pie is bigger!</p>
+        </header>
+
+        <main class="main-content">
+            <section class="input-section">
+                <div class="fractions-row">
+                    <div class="fraction-card coral">
+                        <div class="fraction-card-header">
+                            <div class="fraction-badge coral">1</div>
+                            <span class="fraction-title">First Fraction</span>
+                        </div>
+                        <div class="fraction-inputs">
+                            <div class="input-wrapper">
+                                <span class="input-label">Top Number</span>
+                                <input type="number" id="numerator1" value="1" min="0" max="99">
+                            </div>
+                            <div class="fraction-line"></div>
+                            <div class="input-wrapper">
+                                <span class="input-label">Bottom Number</span>
+                                <input type="number" id="denominator1" value="2" min="1" max="99">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="vs-badge">VS</div>
+
+                    <div class="fraction-card mint">
+                        <div class="fraction-card-header">
+                            <div class="fraction-badge mint">2</div>
+                            <span class="fraction-title">Second Fraction</span>
+                        </div>
+                        <div class="fraction-inputs">
+                            <div class="input-wrapper">
+                                <span class="input-label">Top Number</span>
+                                <input type="number" id="numerator2" value="2" min="0" max="99">
+                            </div>
+                            <div class="fraction-line"></div>
+                            <div class="input-wrapper">
+                                <span class="input-label">Bottom Number</span>
+                                <input type="number" id="denominator2" value="4" min="1" max="99">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="toggle-section">
+                    <button class="toggle-btn" id="toggleButton">
+                        <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 8v8M8 12h8"/>
+                        </svg>
+                        <span>Stack the Pies</span>
+                    </button>
+                </div>
+            </section>
+
+            <section class="visualization-section" id="vizSection">
+                <div class="viz-card">
+                    <div class="canvas-container">
+                        <canvas id="canvas1" width="600" height="600"></canvas>
+                    </div>
+                    <div class="viz-info">
+                        <div class="fraction-display" id="label1">1/2</div>
+                        <div class="percentage-display">
+                            <div class="percentage-bar">
+                                <div class="percentage-fill coral" id="bar1" style="width: 50%"></div>
+                            </div>
+                            <span id="percent1">50%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="viz-card">
+                    <div class="canvas-container">
+                        <canvas id="canvas2" width="600" height="600"></canvas>
+                    </div>
+                    <div class="viz-info">
+                        <div class="fraction-display" id="label2">2/4</div>
+                        <div class="percentage-display">
+                            <div class="percentage-bar">
+                                <div class="percentage-fill mint" id="bar2" style="width: 50%"></div>
+                            </div>
+                            <span id="percent2">50%</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="overlap-section" id="overlapSection">
+                <div class="overlap-card">
+                    <div class="overlap-canvas-container">
+                        <canvas id="overlapCanvas" width="600" height="600"></canvas>
+                    </div>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-dot coral"></div>
+                            <span>First Fraction</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot mint"></div>
+                            <span>Second Fraction</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-dot overlap"></div>
+                            <span>Both Together</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="result-section">
+                <div class="result-card equal" id="resultCard">
+                    <div class="result-icon">✓</div>
+                    <span class="result-text" id="resultText">These fractions are equal! 🎉</span>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        const inputs = {
+            num1: document.getElementById('numerator1'),
+            den1: document.getElementById('denominator1'),
+            num2: document.getElementById('numerator2'),
+            den2: document.getElementById('denominator2')
+        };
+
+        const canvases = {
+            canvas1: document.getElementById('canvas1'),
+            canvas2: document.getElementById('canvas2'),
+            overlap: document.getElementById('overlapCanvas')
+        };
+
+        const elements = {
+            label1: document.getElementById('label1'),
+            label2: document.getElementById('label2'),
+            percent1: document.getElementById('percent1'),
+            percent2: document.getElementById('percent2'),
+            bar1: document.getElementById('bar1'),
+            bar2: document.getElementById('bar2'),
+            vizSection: document.getElementById('vizSection'),
+            overlapSection: document.getElementById('overlapSection'),
+            toggleButton: document.getElementById('toggleButton'),
+            resultCard: document.getElementById('resultCard'),
+            resultText: document.getElementById('resultText')
+        };
+
+        let isOverlapMode = false;
+
+        // Toggle overlap mode
+        elements.toggleButton.addEventListener('click', function() {
+            isOverlapMode = !isOverlapMode;
+            this.classList.toggle('active');
+            this.querySelector('span').textContent = isOverlapMode ? 'Show Both Pies' : 'Stack the Pies';
+            
+            elements.vizSection.classList.toggle('hidden', isOverlapMode);
+            elements.overlapSection.classList.toggle('show', isOverlapMode);
+            
+            updateVisualization();
+        });
+
+        function drawCircle(canvas, numerator, denominator, color, bgColor = '#F5F5F5') {
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+            
+            const width = rect.width;
+            const height = rect.height;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radius = Math.min(width, height) / 2 - 20;
+
+            // Clear with rounded corners effect
+            ctx.clearRect(0, 0, width, height);
+
+            // Validate inputs
+            if (numerator < 0 || denominator <= 0) {
+                ctx.fillStyle = '#E8E8E8';
+                ctx.beginPath();
+                ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+                ctx.fill();
+                return;
+            }
+
+            // Draw background circle (the whole pie)
+            ctx.fillStyle = bgColor;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw shadow for depth
+            ctx.save();
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+            ctx.shadowBlur = 20;
+            ctx.shadowOffsetY = 8;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // Calculate slice
+            const displayNumerator = Math.min(numerator, denominator);
+            const sliceAngle = (2 * Math.PI * displayNumerator) / denominator;
+
+            // Draw filled slice with gradient
+            const gradient = ctx.createLinearGradient(
+                centerX - radius, centerY - radius,
+                centerX + radius, centerY + radius
+            );
+            
+            if (color === 'coral') {
+                gradient.addColorStop(0, '#FF6B6B');
+                gradient.addColorStop(1, '#EE5A5A');
+            } else {
+                gradient.addColorStop(0, '#4ECDC4');
+                gradient.addColorStop(1, '#3DBDB5');
+            }
+
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, -Math.PI / 2, -Math.PI / 2 + sliceAngle);
+            ctx.closePath();
+            ctx.fill();
+
+            // Draw segment lines
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+            ctx.lineWidth = 2;
+            
+            for (let i = 0; i < denominator; i++) {
+                const angle = (2 * Math.PI * i) / denominator - Math.PI / 2;
+                ctx.beginPath();
+                ctx.moveTo(centerX, centerY);
+                ctx.lineTo(
+                    centerX + Math.cos(angle) * radius,
+                    centerY + Math.sin(angle) * radius
+                );
+                ctx.stroke();
+            }
+
+            // Draw outer circle border
+            ctx.strokeStyle = 'rgba(45, 52, 54, 0.15)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        function drawOverlapCircles(canvas, num1, den1, num2, den2) {
+            const ctx = canvas.getContext('2d');
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+            
+            const width = rect.width;
+            const height = rect.height;
+            const centerX = width / 2;
+            const centerY = height / 2;
+            const radius = Math.min(width, height) / 2 - 20;
+
+            ctx.clearRect(0, 0, width, height);
+
+            if (num1 < 0 || den1 <= 0 || num2 < 0 || den2 <= 0) return;
+
+            // Draw background
+            ctx.fillStyle = '#F5F5F5';
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw shadow
+            ctx.save();
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+            ctx.shadowBlur = 20;
+            ctx.shadowOffsetY = 8;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // Calculate angles
+            const displayNum1 = Math.min(num1, den1);
+            const displayNum2 = Math.min(num2, den2);
+            const sliceAngle1 = (2 * Math.PI * displayNum1) / den1;
+            const sliceAngle2 = (2 * Math.PI * displayNum2) / den2;
+
+            // Draw fraction 2 (mint)
+            ctx.fillStyle = 'rgba(78, 205, 196, 0.5)';
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, -Math.PI / 2, -Math.PI / 2 + sliceAngle2);
+            ctx.closePath();
+            ctx.fill();
+
+            // Draw fraction 1 (coral)
+            ctx.fillStyle = 'rgba(255, 107, 107, 0.6)';
+            ctx.beginPath();
+            ctx.moveTo(centerX, centerY);
+            ctx.arc(centerX, centerY, radius, -Math.PI / 2, -Math.PI / 2 + sliceAngle1);
+            ctx.closePath();
+            ctx.fill();
+
+            // Draw outer border
+            ctx.strokeStyle = 'rgba(45, 52, 54, 0.15)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.stroke();
+        }
+
+        function updateVisualization() {
+            const num1 = parseInt(inputs.num1.value) || 0;
+            const den1 = parseInt(inputs.den1.value) || 1;
+            const num2 = parseInt(inputs.num2.value) || 0;
+            const den2 = parseInt(inputs.den2.value) || 1;
+
+            // Check for errors
+            let hasError = false;
+            let errorMsg = '';
+            
+            if (den1 <= 0 || den2 <= 0) {
+                hasError = true;
+                errorMsg = 'Oops! Bottom number must be bigger than 0';
+            }
+            if (num1 < 0 || num2 < 0) {
+                hasError = true;
+                errorMsg = 'Oops! Top number can\'t be negative';
+            }
+
+            if (hasError) {
+                elements.resultCard.className = 'result-card error';
+                elements.resultCard.querySelector('.result-icon').textContent = '!';
+                elements.resultText.textContent = errorMsg;
+                return;
+            }
+
+            // Draw visualizations
+            if (isOverlapMode) {
+                drawOverlapCircles(canvases.overlap, num1, den1, num2, den2);
+            } else {
+                drawCircle(canvases.canvas1, num1, den1, 'coral');
+                drawCircle(canvases.canvas2, num2, den2, 'mint');
+            }
+
+            // Update labels
+            elements.label1.textContent = `${num1}/${den1}`;
+            elements.label2.textContent = `${num2}/${den2}`;
+
+            // Calculate and display percentages
+            const percent1 = ((num1 / den1) * 100).toFixed(0);
+            const percent2 = ((num2 / den2) * 100).toFixed(0);
+            
+            elements.percent1.textContent = `${percent1}%`;
+            elements.percent2.textContent = `${percent2}%`;
+            elements.bar1.style.width = `${Math.min(100, percent1)}%`;
+            elements.bar2.style.width = `${Math.min(100, percent2)}%`;
+
+            // Compare fractions
+            const value1 = num1 / den1;
+            const value2 = num2 / den2;
+
+            if (Math.abs(value1 - value2) < 0.0001) {
+                elements.resultCard.className = 'result-card equal';
+                elements.resultCard.querySelector('.result-icon').textContent = '✓';
+                elements.resultText.textContent = 'These fractions are equal! 🎉';
+            } else if (value1 > value2) {
+                elements.resultCard.className = 'result-card not-equal';
+                elements.resultCard.querySelector('.result-icon').textContent = '🍕';
+                elements.resultText.textContent = 'The FIRST fraction is bigger!';
+            } else {
+                elements.resultCard.className = 'result-card not-equal';
+                elements.resultCard.querySelector('.result-icon').textContent = '🍕';
+                elements.resultText.textContent = 'The SECOND fraction is bigger!';
+            }
+        }
+
+        // Event listeners
+        Object.values(inputs).forEach(input => {
+            input.addEventListener('input', updateVisualization);
+            input.addEventListener('change', updateVisualization);
+        });
+
+        // Handle window resize
+        let resizeTimeout;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(updateVisualization, 100);
+        });
+
+        // Initial draw
+        setTimeout(updateVisualization, 100);
+    </script>
+</body>
+</html>
