@@ -37,57 +37,9 @@
 
         body {
             font-family: 'Nunito', sans-serif;
-            background: var(--bg-cream);
+            background: #1a1a2e;
             height: 100vh;
             position: relative;
-        }
-
-        /* Animated background blobs */
-        .bg-decoration {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 0;
-        }
-
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.35;
-            animation: float 20s ease-in-out infinite;
-        }
-
-        .blob-1 {
-            width: 300px;
-            height: 300px;
-            background: var(--primary-coral);
-            top: -100px;
-            left: -100px;
-        }
-
-        .blob-2 {
-            width: 250px;
-            height: 250px;
-            background: var(--primary-mint);
-            top: 40%;
-            right: -50px;
-            animation-delay: -5s;
-        }
-
-        .blob-3 {
-            width: 280px;
-            height: 280px;
-            background: var(--primary-lavender);
-            bottom: -80px;
-            left: 30%;
-            animation-delay: -10s;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(20px, -20px) scale(1.05); }
         }
 
         /* Main container - fits viewport */
@@ -650,12 +602,6 @@
     </style>
 </head>
 <body>
-    <div class="bg-decoration">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
-    </div>
-
     <div class="app">
         <header class="header">
             <a href="index.html" class="home-btn">← Home</a>
@@ -862,20 +808,11 @@
             const displayNumerator = Math.min(numerator, denominator);
             const sliceAngle = (2 * Math.PI * displayNumerator) / denominator;
 
-            const gradient = ctx.createLinearGradient(
-                centerX - radius, centerY - radius,
-                centerX + radius, centerY + radius
-            );
-
             if (color === 'coral') {
-                gradient.addColorStop(0, '#FF6B6B');
-                gradient.addColorStop(1, '#EE5A5A');
+                ctx.fillStyle = '#FF6B6B';
             } else {
-                gradient.addColorStop(0, '#4ECDC4');
-                gradient.addColorStop(1, '#3DBDB5');
+                ctx.fillStyle = '#4ECDC4';
             }
-
-            ctx.fillStyle = gradient;
             ctx.beginPath();
             ctx.moveTo(centerX, centerY);
             ctx.arc(centerX, centerY, radius, -Math.PI / 2, -Math.PI / 2 + sliceAngle);
