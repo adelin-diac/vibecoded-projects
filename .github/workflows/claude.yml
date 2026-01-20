@@ -1,0 +1,49 @@
+name: Claude Assistant
+
+on:
+  issue_comment:
+    types: [created]
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  # Responds to @claude comments
+  claude-comment:
+    if: github.event_name == 'issue_comment'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+
+  # Auto-implements when you add 'claude' label
+  claude-auto-implement:
+    if: github.event_name == 'issues' && github.event.action == 'labeled' && github.event.label.name == 'claude'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            Implement the feature/fix described in issue #${{ github.event.issue.number }}.
+
+            1. Read the issue carefully
+            2. Implement the solution
+            3. Add/update tests if applicable
+            4. Create a PR referencing this issue
