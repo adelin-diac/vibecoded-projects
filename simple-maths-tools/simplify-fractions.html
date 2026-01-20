@@ -318,6 +318,8 @@
             background: white;
             transition: all 0.3s var(--transition-smooth);
             -moz-appearance: textfield;
+            caret-color: transparent;
+            cursor: default;
         }
 
         input[type="number"]::-webkit-outer-spin-button,
@@ -326,10 +328,14 @@
             margin: 0;
         }
 
+        input[type="number"]::selection {
+            background: transparent;
+        }
+
         input[type="number"]:focus {
             outline: none;
             border-color: var(--primary-lavender);
-            box-shadow: 0 0 0 3px rgba(162, 155, 254, 0.2);
+            box-shadow: 0 0 0 4px rgba(162, 155, 254, 0.3);
         }
 
         input[type="number"].correct {
@@ -397,9 +403,15 @@
             box-shadow: 0 4px 16px rgba(162, 155, 254, 0.3);
         }
 
-        .btn-next:hover {
+        .btn-next:hover:not(:disabled) {
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(162, 155, 254, 0.4);
+        }
+
+        .btn-next:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
         }
 
         /* Feedback message */
@@ -604,7 +616,7 @@
         let currentProblem = { numerator: 0, denominator: 0 };
         let correctAnswer = { numerator: 0, denominator: 0 };
         let score = { correct: 0, total: 0 };
-        let hasAnswered = false;
+        let hasAnsweredCorrectly = false;
 
         // DOM elements
         const elements = {
@@ -645,25 +657,51 @@
             return gcd(numerator, denominator) === 1;
         }
 
-        // Generate a random fraction that is NOT already simplified
+        // Generate a random fraction using multiples of 1-12 up to 144
         function generateProblem() {
-            const denominators = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-            let attempts = 0;
+            // Pick a base fraction (simplified form) from 1-12
+            const bases = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+            let baseNum, baseDen, multiplier;
             let numerator, denominator;
+            let attempts = 0;
 
             do {
-                denominator = denominators[Math.floor(Math.random() * denominators.length)];
-                numerator = Math.floor(Math.random() * (denominator - 1)) + 1;
-                attempts++;
-            } while (isSimplified(numerator, denominator) && attempts < 100);
+                // Pick random numerator and denominator for the simplified form
+                baseDen = bases[Math.floor(Math.random() * bases.length)];
+                baseNum = Math.floor(Math.random() * baseDen) + 1;
 
-            // If we couldn't find a non-simplified fraction, use a known one
-            if (isSimplified(numerator, denominator)) {
+                // Make sure base fraction is already simplified
+                const simplified = simplifyFraction(baseNum, baseDen);
+                baseNum = simplified.numerator;
+                baseDen = simplified.denominator;
+
+                // Pick a multiplier (2-12) to create a non-simplified fraction
+                const maxMultiplier = Math.floor(144 / baseDen);
+                if (maxMultiplier < 2) continue;
+
+                multiplier = Math.floor(Math.random() * (Math.min(maxMultiplier, 12) - 1)) + 2;
+
+                numerator = baseNum * multiplier;
+                denominator = baseDen * multiplier;
+
+                attempts++;
+            } while ((isSimplified(numerator, denominator) || denominator > 144 || numerator >= denominator) && attempts < 100);
+
+            // Fallback to known good problems if needed
+            if (isSimplified(numerator, denominator) || denominator > 144 || numerator >= denominator) {
                 const knownProblems = [
-                    { num: 2, den: 4 }, { num: 3, den: 6 }, { num: 4, den: 8 },
-                    { num: 2, den: 6 }, { num: 3, den: 9 }, { num: 4, den: 12 },
-                    { num: 6, den: 8 }, { num: 6, den: 9 }, { num: 8, den: 12 },
-                    { num: 4, den: 6 }, { num: 6, den: 10 }, { num: 9, den: 12 }
+                    { num: 12, den: 24 }, { num: 18, den: 36 }, { num: 24, den: 48 },
+                    { num: 36, den: 72 }, { num: 48, den: 96 }, { num: 60, den: 144 },
+                    { num: 24, den: 36 }, { num: 36, den: 48 }, { num: 48, den: 72 },
+                    { num: 30, den: 60 }, { num: 42, den: 84 }, { num: 54, den: 108 },
+                    { num: 24, den: 60 }, { num: 36, den: 90 }, { num: 48, den: 120 },
+                    { num: 20, den: 80 }, { num: 33, den: 99 }, { num: 44, den: 132 },
+                    { num: 15, den: 45 }, { num: 28, den: 84 }, { num: 35, den: 105 },
+                    { num: 18, den: 72 }, { num: 27, den: 108 }, { num: 36, den: 144 },
+                    { num: 8, den: 24 }, { num: 9, den: 27 }, { num: 10, den: 30 },
+                    { num: 14, den: 42 }, { num: 16, den: 48 }, { num: 21, den: 63 },
+                    { num: 55, den: 110 }, { num: 66, den: 132 }, { num: 77, den: 121 },
+                    { num: 45, den: 90 }, { num: 63, den: 126 }, { num: 72, den: 144 }
                 ];
                 const problem = knownProblems[Math.floor(Math.random() * knownProblems.length)];
                 numerator = problem.num;
@@ -675,7 +713,7 @@
 
         // Start a new problem
         function newProblem() {
-            hasAnswered = false;
+            hasAnsweredCorrectly = false;
             currentProblem = generateProblem();
             correctAnswer = simplifyFraction(currentProblem.numerator, currentProblem.denominator);
 
@@ -694,6 +732,7 @@
 
             // Reset buttons
             elements.checkBtn.disabled = false;
+            elements.nextBtn.disabled = true;
 
             // Focus first input
             elements.answerNumerator.focus();
@@ -704,7 +743,7 @@
 
         // Check the user's answer
         function checkAnswer() {
-            if (hasAnswered) return;
+            if (hasAnsweredCorrectly) return;
 
             const userNum = parseInt(elements.answerNumerator.value);
             const userDen = parseInt(elements.answerDenominator.value);
@@ -716,9 +755,6 @@
                 elements.feedback.style.display = 'block';
                 return;
             }
-
-            hasAnswered = true;
-            score.total++;
 
             // Check if the answer is correct (must be in lowest terms AND equal to correct answer)
             const isCorrect = userNum === correctAnswer.numerator &&
@@ -733,22 +769,33 @@
                 userDen === userSimplified.denominator;
 
             if (isCorrect || isEquivalentAndSimplified) {
+                hasAnsweredCorrectly = true;
+                score.total++;
                 score.correct++;
                 elements.answerNumerator.className = 'correct';
                 elements.answerDenominator.className = 'correct';
                 elements.feedback.textContent = 'Correct! Great job!';
                 elements.feedback.className = 'feedback-message success';
                 elements.problemCard.classList.add('celebrate');
+                elements.checkBtn.disabled = true;
+                elements.nextBtn.disabled = false;
+                updateScore();
             } else {
                 elements.answerNumerator.className = 'incorrect';
                 elements.answerDenominator.className = 'incorrect';
-                elements.feedback.textContent = `Not quite! The answer is ${correctAnswer.numerator}/${correctAnswer.denominator}. Try the next one!`;
+                elements.feedback.textContent = 'Not quite! Try again!';
                 elements.feedback.className = 'feedback-message error';
+                // Clear inputs for another attempt
+                setTimeout(() => {
+                    elements.answerNumerator.value = '';
+                    elements.answerDenominator.value = '';
+                    elements.answerNumerator.className = '';
+                    elements.answerDenominator.className = '';
+                    elements.answerNumerator.focus();
+                }, 800);
             }
 
             elements.feedback.style.display = 'block';
-            elements.checkBtn.disabled = true;
-            updateScore();
         }
 
         // Update score display
@@ -758,12 +805,16 @@
 
         // Event listeners
         elements.checkBtn.addEventListener('click', checkAnswer);
-        elements.nextBtn.addEventListener('click', newProblem);
+        elements.nextBtn.addEventListener('click', () => {
+            if (hasAnsweredCorrectly) {
+                newProblem();
+            }
+        });
 
         // Allow Enter key to check/next
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                if (hasAnswered) {
+                if (hasAnsweredCorrectly) {
                     newProblem();
                 } else {
                     checkAnswer();
@@ -771,20 +822,74 @@
             }
         });
 
-        // Tab between inputs
-        elements.answerNumerator.addEventListener('keydown', (e) => {
-            if (e.key === 'Tab' && !e.shiftKey) {
-                e.preventDefault();
-                elements.answerDenominator.focus();
-            }
-        });
+        // Track if we just focused an input (for Google Sheets-like behavior)
+        let justFocused = { numerator: false, denominator: false };
 
-        elements.answerDenominator.addEventListener('keydown', (e) => {
-            if (e.key === 'Tab' && e.shiftKey) {
-                e.preventDefault();
-                elements.answerNumerator.focus();
-            }
-        });
+        // Google Sheets-like input handling
+        function setupSheetsBehavior(input, inputKey) {
+            // When focusing, mark as just focused
+            input.addEventListener('focus', () => {
+                justFocused[inputKey] = true;
+            });
+
+            input.addEventListener('keydown', (e) => {
+                // Arrow keys and Tab to move between inputs
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || (e.key === 'Tab' && !e.shiftKey)) {
+                    e.preventDefault();
+                    elements.answerDenominator.focus();
+                    return;
+                }
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || (e.key === 'Tab' && e.shiftKey)) {
+                    e.preventDefault();
+                    elements.answerNumerator.focus();
+                    return;
+                }
+
+                // Backspace clears entire entry
+                if (e.key === 'Backspace') {
+                    e.preventDefault();
+                    input.value = '';
+                    justFocused[inputKey] = false;
+                    return;
+                }
+
+                // Delete clears entire entry
+                if (e.key === 'Delete') {
+                    e.preventDefault();
+                    input.value = '';
+                    justFocused[inputKey] = false;
+                    return;
+                }
+
+                // Number keys - if just focused, replace; otherwise append
+                if (e.key >= '0' && e.key <= '9') {
+                    e.preventDefault();
+                    if (justFocused[inputKey]) {
+                        input.value = e.key;
+                        justFocused[inputKey] = false;
+                    } else {
+                        // Limit to 3 digits
+                        if (input.value.length < 3) {
+                            input.value += e.key;
+                        }
+                    }
+                    return;
+                }
+
+                // Prevent all other keys except Enter (handled globally)
+                if (e.key !== 'Enter') {
+                    e.preventDefault();
+                }
+            });
+
+            // Clicking also marks as just focused
+            input.addEventListener('click', () => {
+                justFocused[inputKey] = true;
+            });
+        }
+
+        setupSheetsBehavior(elements.answerNumerator, 'numerator');
+        setupSheetsBehavior(elements.answerDenominator, 'denominator');
 
         // Initialize
         newProblem();

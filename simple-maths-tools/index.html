@@ -1,464 +1,494 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fraction Friends</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Maths Tools | Adelin Diac</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
     <style>
-        :root {
-            --bg-cream: #FFF8F0;
-            --bg-soft: #FFFCF7;
-            --primary-coral: #FF6B6B;
-            --primary-mint: #4ECDC4;
-            --primary-sunny: #FFE66D;
-            --primary-lavender: #A29BFE;
-            --primary-peach: #FFEAA7;
-            --text-dark: #2D3436;
-            --text-soft: #636E72;
-            --shadow-soft: rgba(45, 52, 54, 0.08);
-            --shadow-medium: rgba(45, 52, 54, 0.12);
-            --radius-xl: 24px;
-            --radius-lg: 16px;
-            --radius-md: 12px;
-            --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
-        }
+      :root {
+        --bg-cream: #fff8f0;
+        --bg-soft: #fffcf7;
+        --primary-coral: #ff6b6b;
+        --primary-mint: #4ecdc4;
+        --primary-sunny: #ffe66d;
+        --primary-lavender: #a29bfe;
+        --primary-peach: #ffeaa7;
+        --text-dark: #2d3436;
+        --text-soft: #636e72;
+        --shadow-soft: rgba(45, 52, 54, 0.08);
+        --shadow-medium: rgba(45, 52, 54, 0.12);
+        --radius-xl: 24px;
+        --radius-lg: 16px;
+        --radius-md: 12px;
+        --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+      }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-        html, body {
-            height: 100%;
-            overflow: hidden;
-        }
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
 
-        body {
-            font-family: 'Nunito', sans-serif;
-            background: var(--bg-cream);
-            height: 100vh;
-            position: relative;
-        }
+      body {
+        font-family: "Nunito", sans-serif;
+        background: var(--bg-cream);
+        height: 100vh;
+        position: relative;
+      }
 
-        /* Animated background blobs */
-        .bg-decoration {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 0;
-        }
+      /* Animated background blobs */
+      .bg-decoration {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 0;
+      }
 
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.35;
-            animation: float 20s ease-in-out infinite;
-        }
+      .blob {
+        position: absolute;
+        border-radius: 50%;
+        filter: blur(80px);
+        opacity: 0.35;
+        animation: float 20s ease-in-out infinite;
+      }
 
-        .blob-1 {
-            width: 300px;
-            height: 300px;
-            background: var(--primary-coral);
-            top: -100px;
-            left: -100px;
-        }
+      .blob-1 {
+        width: 300px;
+        height: 300px;
+        background: var(--primary-coral);
+        top: -100px;
+        left: -100px;
+      }
 
-        .blob-2 {
-            width: 250px;
-            height: 250px;
-            background: var(--primary-mint);
-            top: 40%;
-            right: -50px;
-            animation-delay: -5s;
-        }
+      .blob-2 {
+        width: 250px;
+        height: 250px;
+        background: var(--primary-mint);
+        top: 40%;
+        right: -50px;
+        animation-delay: -5s;
+      }
 
-        .blob-3 {
-            width: 280px;
-            height: 280px;
-            background: var(--primary-lavender);
-            bottom: -80px;
-            left: 30%;
-            animation-delay: -10s;
-        }
+      .blob-3 {
+        width: 280px;
+        height: 280px;
+        background: var(--primary-lavender);
+        bottom: -80px;
+        left: 30%;
+        animation-delay: -10s;
+      }
 
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            50% { transform: translate(20px, -20px) scale(1.05); }
+      @keyframes float {
+        0%,
+        100% {
+          transform: translate(0, 0) scale(1);
         }
+        50% {
+          transform: translate(20px, -20px) scale(1.05);
+        }
+      }
 
-        /* Main container - fits viewport */
+      /* Main container - fits viewport */
+      .app {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        height: 100vh;
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 20px 32px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 24px;
+      }
+
+      /* Header */
+      .header {
+        text-align: center;
+        animation: slideDown 0.6s var(--transition-smooth);
+      }
+
+      @keyframes slideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .logo-icon {
+        width: 56px;
+        height: 56px;
+        background: linear-gradient(
+          135deg,
+          var(--primary-coral),
+          var(--primary-lavender)
+        );
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        box-shadow: 0 4px 16px var(--shadow-medium);
+        animation: bounce 2s ease-in-out infinite;
+      }
+
+      @keyframes bounce {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-6px);
+        }
+      }
+
+      h1 {
+        font-family: "Fredoka", sans-serif;
+        font-size: clamp(28px, 4vw, 40px);
+        font-weight: 700;
+        color: var(--text-dark);
+        letter-spacing: -0.5px;
+      }
+
+      .tagline {
+        font-family: "Nunito", sans-serif;
+        font-size: clamp(14px, 1.8vw, 18px);
+        font-weight: 600;
+        color: var(--text-soft);
+        margin-top: 4px;
+      }
+
+      /* Sections container */
+      .sections-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+        animation: fadeIn 0.8s var(--transition-smooth) 0.2s both;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* Section cards */
+      .section {
+        background: white;
+        border-radius: var(--radius-xl);
+        padding: 24px;
+        box-shadow: 0 4px 24px var(--shadow-soft);
+        border: 3px solid transparent;
+      }
+
+      .section.tools {
+        border-color: var(--primary-coral);
+      }
+
+      .section.practice {
+        border-color: var(--primary-mint);
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 16px;
+        padding-bottom: 12px;
+        border-bottom: 2px solid var(--bg-soft);
+      }
+
+      .section-icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        box-shadow: 0 2px 8px var(--shadow-soft);
+      }
+
+      .section.tools .section-icon {
+        background: linear-gradient(135deg, var(--primary-coral), #ff8e8e);
+      }
+
+      .section.practice .section-icon {
+        background: linear-gradient(135deg, var(--primary-mint), #6fe4dc);
+      }
+
+      .section-title {
+        font-family: "Fredoka", sans-serif;
+        font-size: clamp(20px, 2.5vw, 26px);
+        font-weight: 700;
+        color: var(--text-dark);
+      }
+
+      /* Item links */
+      .items-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .item-link {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px;
+        background: var(--bg-soft);
+        border-radius: var(--radius-lg);
+        text-decoration: none;
+        transition: all 0.3s var(--transition-smooth);
+        border: 2px solid transparent;
+      }
+
+      .item-link:hover {
+        transform: translateX(6px);
+        border-color: #e8e8e8;
+        box-shadow: 0 4px 12px var(--shadow-soft);
+      }
+
+      .section.tools .item-link:hover {
+        background: #fff5f5;
+        border-color: var(--primary-coral);
+      }
+
+      .section.practice .item-link:hover {
+        background: #f5fffd;
+        border-color: var(--primary-mint);
+      }
+
+      .item-emoji {
+        font-size: 24px;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border-radius: var(--radius-md);
+        box-shadow: 0 2px 6px var(--shadow-soft);
+        flex-shrink: 0;
+      }
+
+      .item-content {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .item-name {
+        font-family: "Fredoka", sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      .item-desc {
+        font-family: "Nunito", sans-serif;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-soft);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .item-arrow {
+        font-size: 18px;
+        color: var(--text-soft);
+        transition: all 0.3s var(--transition-smooth);
+        flex-shrink: 0;
+      }
+
+      .item-link:hover .item-arrow {
+        transform: translateX(4px);
+      }
+
+      .section.tools .item-link:hover .item-arrow {
+        color: var(--primary-coral);
+      }
+
+      .section.practice .item-link:hover .item-arrow {
+        color: var(--primary-mint);
+      }
+
+      /* Responsive */
+      @media (max-height: 600px) {
         .app {
-            position: relative;
-            z-index: 1;
-            width: 100%;
-            height: 100vh;
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 20px 32px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            gap: 24px;
-        }
-
-        /* Header */
-        .header {
-            text-align: center;
-            animation: slideDown 0.6s var(--transition-smooth);
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .logo {
-            display: inline-flex;
-            align-items: center;
-            gap: 16px;
+          padding: 12px 20px;
+          gap: 16px;
         }
 
         .logo-icon {
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, var(--primary-coral), var(--primary-lavender));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 28px;
-            box-shadow: 0 4px 16px var(--shadow-medium);
-            animation: bounce 2s ease-in-out infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-6px); }
+          width: 44px;
+          height: 44px;
+          font-size: 22px;
         }
 
         h1 {
-            font-family: 'Fredoka', sans-serif;
-            font-size: clamp(28px, 4vw, 40px);
-            font-weight: 700;
-            color: var(--text-dark);
-            letter-spacing: -0.5px;
+          font-size: 28px;
         }
 
         .tagline {
-            font-family: 'Nunito', sans-serif;
-            font-size: clamp(14px, 1.8vw, 18px);
-            font-weight: 600;
-            color: var(--text-soft);
-            margin-top: 4px;
+          font-size: 13px;
         }
 
-        /* Sections container */
-        .sections-container {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            animation: fadeIn 0.8s var(--transition-smooth) 0.2s both;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Section cards */
         .section {
-            background: white;
-            border-radius: var(--radius-xl);
-            padding: 24px;
-            box-shadow: 0 4px 24px var(--shadow-soft);
-            border: 3px solid transparent;
-        }
-
-        .section.tools {
-            border-color: var(--primary-coral);
-        }
-
-        .section.practice {
-            border-color: var(--primary-mint);
+          padding: 16px;
         }
 
         .section-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--bg-soft);
+          margin-bottom: 12px;
+          padding-bottom: 10px;
         }
 
         .section-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 22px;
-            box-shadow: 0 2px 8px var(--shadow-soft);
-        }
-
-        .section.tools .section-icon {
-            background: linear-gradient(135deg, var(--primary-coral), #FF8E8E);
-        }
-
-        .section.practice .section-icon {
-            background: linear-gradient(135deg, var(--primary-mint), #6FE4DC);
+          width: 36px;
+          height: 36px;
+          font-size: 18px;
         }
 
         .section-title {
-            font-family: 'Fredoka', sans-serif;
-            font-size: clamp(20px, 2.5vw, 26px);
-            font-weight: 700;
-            color: var(--text-dark);
+          font-size: 20px;
         }
 
-        /* Item links */
         .items-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+          gap: 8px;
         }
 
         .item-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 16px;
-            background: var(--bg-soft);
-            border-radius: var(--radius-lg);
-            text-decoration: none;
-            transition: all 0.3s var(--transition-smooth);
-            border: 2px solid transparent;
-        }
-
-        .item-link:hover {
-            transform: translateX(6px);
-            border-color: #E8E8E8;
-            box-shadow: 0 4px 12px var(--shadow-soft);
-        }
-
-        .section.tools .item-link:hover {
-            background: #FFF5F5;
-            border-color: var(--primary-coral);
-        }
-
-        .section.practice .item-link:hover {
-            background: #F5FFFD;
-            border-color: var(--primary-mint);
+          padding: 10px 12px;
+          gap: 10px;
         }
 
         .item-emoji {
-            font-size: 24px;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            border-radius: var(--radius-md);
-            box-shadow: 0 2px 6px var(--shadow-soft);
-            flex-shrink: 0;
-        }
-
-        .item-content {
-            flex: 1;
-            min-width: 0;
+          width: 32px;
+          height: 32px;
+          font-size: 18px;
         }
 
         .item-name {
-            font-family: 'Fredoka', sans-serif;
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-dark);
+          font-size: 14px;
         }
 
         .item-desc {
-            font-family: 'Nunito', sans-serif;
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--text-soft);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+          font-size: 12px;
+        }
+      }
+
+      @media (max-width: 800px) {
+        .sections-container {
+          grid-template-columns: 1fr;
+          gap: 16px;
         }
 
-        .item-arrow {
-            font-size: 18px;
-            color: var(--text-soft);
-            transition: all 0.3s var(--transition-smooth);
-            flex-shrink: 0;
+        .section {
+          padding: 20px;
         }
 
-        .item-link:hover .item-arrow {
-            transform: translateX(4px);
+        .items-list {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
         }
 
-        .section.tools .item-link:hover .item-arrow {
-            color: var(--primary-coral);
+        .item-desc {
+          display: none;
+        }
+      }
+
+      @media (max-width: 500px) {
+        .items-list {
+          grid-template-columns: 1fr;
         }
 
-        .section.practice .item-link:hover .item-arrow {
-            color: var(--primary-mint);
+        .item-desc {
+          display: block;
         }
-
-        /* Responsive */
-        @media (max-height: 600px) {
-            .app {
-                padding: 12px 20px;
-                gap: 16px;
-            }
-
-            .logo-icon {
-                width: 44px;
-                height: 44px;
-                font-size: 22px;
-            }
-
-            h1 {
-                font-size: 28px;
-            }
-
-            .tagline {
-                font-size: 13px;
-            }
-
-            .section {
-                padding: 16px;
-            }
-
-            .section-header {
-                margin-bottom: 12px;
-                padding-bottom: 10px;
-            }
-
-            .section-icon {
-                width: 36px;
-                height: 36px;
-                font-size: 18px;
-            }
-
-            .section-title {
-                font-size: 20px;
-            }
-
-            .items-list {
-                gap: 8px;
-            }
-
-            .item-link {
-                padding: 10px 12px;
-                gap: 10px;
-            }
-
-            .item-emoji {
-                width: 32px;
-                height: 32px;
-                font-size: 18px;
-            }
-
-            .item-name {
-                font-size: 14px;
-            }
-
-            .item-desc {
-                font-size: 12px;
-            }
-        }
-
-        @media (max-width: 800px) {
-            .sections-container {
-                grid-template-columns: 1fr;
-                gap: 16px;
-            }
-
-            .section {
-                padding: 20px;
-            }
-
-            .items-list {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-
-            .item-desc {
-                display: none;
-            }
-        }
-
-        @media (max-width: 500px) {
-            .items-list {
-                grid-template-columns: 1fr;
-            }
-
-            .item-desc {
-                display: block;
-            }
-        }
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div class="bg-decoration">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
+      <div class="blob blob-1"></div>
+      <div class="blob blob-2"></div>
+      <div class="blob blob-3"></div>
     </div>
 
     <div class="app">
-        <header class="header">
-            <div class="logo">
-                <div class="logo-icon">🥧</div>
-                <div>
-                    <h1>Fraction Friends</h1>
-                    <p class="tagline">Learn fractions the fun way!</p>
-                </div>
-            </div>
-        </header>
+      <header class="header">
+        <div class="logo">
+          <div class="logo-icon">🥧</div>
+          <div>
+            <h1>Fraction Friends</h1>
+            <p class="tagline">Learn fractions the fun way!</p>
+          </div>
+        </div>
+      </header>
 
-        <main class="sections-container">
-            <section class="section tools">
-                <div class="section-header">
-                    <div class="section-icon">🛠️</div>
-                    <h2 class="section-title">Tools</h2>
-                </div>
-                <div class="items-list">
-                    <a href="fraction-visualizer.html" class="item-link">
-                        <div class="item-emoji">🥧</div>
-                        <div class="item-content">
-                            <div class="item-name">Fraction Visualizer</div>
-                            <div class="item-desc">Compare fractions with pie charts</div>
-                        </div>
-                        <span class="item-arrow">→</span>
-                    </a>
-                </div>
-            </section>
+      <main class="sections-container">
+        <section class="section tools">
+          <div class="section-header">
+            <div class="section-icon">🛠️</div>
+            <h2 class="section-title">Tools</h2>
+          </div>
+          <div class="items-list">
+            <a href="fraction-visualizer.html" class="item-link">
+              <div class="item-emoji">🥧</div>
+              <div class="item-content">
+                <div class="item-name">Fraction Visualizer</div>
+                <div class="item-desc">Compare fractions with pie charts</div>
+              </div>
+              <span class="item-arrow">→</span>
+            </a>
+          </div>
+        </section>
 
-            <section class="section practice">
-                <div class="section-header">
-                    <div class="section-icon">✏️</div>
-                    <h2 class="section-title">Practice</h2>
-                </div>
-                <div class="items-list">
-                    <a href="simplify-fractions.html" class="item-link">
-                        <div class="item-emoji">✂️</div>
-                        <div class="item-content">
-                            <div class="item-name">Simplify Fractions</div>
-                            <div class="item-desc">Reduce fractions to lowest terms</div>
-                        </div>
-                        <span class="item-arrow">→</span>
-                    </a>
-                </div>
-            </section>
-        </main>
+        <section class="section practice">
+          <div class="section-header">
+            <div class="section-icon">✏️</div>
+            <h2 class="section-title">Practice</h2>
+          </div>
+          <div class="items-list">
+            <a href="simplify-fractions.html" class="item-link">
+              <div class="item-emoji">✂️</div>
+              <div class="item-content">
+                <div class="item-name">Simplify Fractions</div>
+                <div class="item-desc">Reduce fractions to lowest terms</div>
+              </div>
+              <span class="item-arrow">→</span>
+            </a>
+          </div>
+        </section>
+      </main>
     </div>
-</body>
+  </body>
 </html>
