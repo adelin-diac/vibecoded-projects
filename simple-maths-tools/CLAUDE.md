@@ -24,7 +24,7 @@ Educational math tools designed for children learning fractions.
 ```
 
 ### UI Patterns
-- Animated background blobs (3 colored circles with blur)
+- Light cream solid background using `--bg-cream`
 - Rounded cards with soft shadows (`border-radius: 24px`)
 - Large touch targets (minimum 44px) for tablet use
 - Viewport locked to 100vh with `overflow: hidden`
@@ -43,9 +43,10 @@ simple-maths-tools/
 
 ### Adding New Tools
 1. Create a new `.html` file in this directory
-2. Copy the CSS variables and blob background from existing files
-3. Add a "← Home" button linking to `index.html`
-4. Add entry to `index.html` in the appropriate section (Tools or Practice)
+2. Copy the CSS variables from existing files
+3. Set body background to `var(--bg-cream)` for light cream background
+4. Add a "← Home" button linking to `index.html`
+5. Add entry to `index.html` in the appropriate section (Tools or Practice)
 
 ### Input Behavior (Practice Pages)
 - Google Sheets-like input: no cursor, typing replaces on first keystroke
