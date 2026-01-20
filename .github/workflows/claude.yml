@@ -6,7 +6,6 @@ on:
 
 jobs:
   claude-implement:
-    # Only runs if 'claude' label added AND issue was created by you
     if: |
       github.event.label.name == 'claude' && 
       github.event.issue.user.login == 'adelin-diac'
@@ -24,10 +23,13 @@ jobs:
       - uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: |
+            --allowedTools "Bash(gh:*)" "Bash(git:*)" "Bash(npm:*)" "Bash(node:*)" "Read" "Write" "Edit" "Glob" "Grep"
           prompt: |
             Implement the feature/fix described in issue #${{ github.event.issue.number }}.
 
-            1. Read the issue carefully
+            1. Use `gh issue view ${{ github.event.issue.number }}` to read the issue
             2. Implement the solution
             3. Add/update tests if applicable
-            4. Create a PR referencing this issue
+            4. Commit your changes with `git add . && git commit -m "your message"`
+            5. Create a PR with `gh pr create --title "Fix #${{ github.event.issue.number }}" --body "Closes #${{ github.event.issue.number }}"`
