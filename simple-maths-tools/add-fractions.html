@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraction Friends - Add Fractions Practice</title>
+    <link rel="icon" type="image/png" href="assets/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+    <link rel="shortcut icon" href="assets/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Simple Maths Tools" />
+    <link rel="manifest" href="assets/site.webmanifest" />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-cream: #FFF8F0;
+            --bg-soft: #FFFCF7;
+            --primary-coral: #FF6B6B;
+            --primary-mint: #4ECDC4;
+            --primary-sunny: #FFE66D;
+            --primary-lavender: #A29BFE;
+            --primary-peach: #FFEAA7;
+            --text-dark: #2D3436;
+            --text-soft: #636E72;
+            --shadow-soft: rgba(45, 52, 54, 0.08);
+            --shadow-medium: rgba(45, 52, 54, 0.12);
+            --radius-xl: 24px;
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+            --success-green: #28A745;
+            --error-orange: #F39C12;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--bg-cream);
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Main container - fits viewport */
+        .app {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            height: 100vh;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            animation: slideDown 0.6s var(--transition-smooth);
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .home-btn {
+            position: absolute;
+            left: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 18px;
+            background: white;
+            border: 3px solid #E8E8E8;
+            border-radius: 100px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-dark);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s var(--transition-smooth);
+            min-height: 44px;
+        }
+
+        .home-btn:hover {
+            border-color: var(--primary-lavender);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--shadow-soft);
+        }
+
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background: var(--primary-coral);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            box-shadow: 0 4px 16px var(--shadow-medium);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        h1 {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(22px, 4vw, 32px);
+            font-weight: 700;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+
+        /* Score display */
+        .score-section {
+            display: flex;
+            justify-content: center;
+            animation: fadeIn 0.8s var(--transition-smooth) 0.1s both;
+        }
+
+        .score-card {
+            background: white;
+            border-radius: 100px;
+            padding: 12px 28px;
+            box-shadow: 0 4px 16px var(--shadow-soft);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .score-label {
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-soft);
+        }
+
+        .score-value {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-coral);
+        }
+
+        /* Main content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 24px;
+            animation: fadeIn 0.8s var(--transition-smooth) 0.2s both;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Problem card */
+        .problem-card {
+            background: white;
+            border-radius: var(--radius-xl);
+            padding: 32px 48px;
+            box-shadow: 0 4px 24px var(--shadow-soft);
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .problem-label {
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-soft);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .problem-expression {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .problem-fraction {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .problem-numerator,
+        .problem-denominator {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(40px, 7vw, 56px);
+            font-weight: 700;
+            color: var(--text-dark);
+            line-height: 1;
+        }
+
+        .problem-line {
+            width: 80px;
+            height: 5px;
+            background: var(--primary-lavender);
+            border-radius: 3px;
+        }
+
+        .problem-operator {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(36px, 6vw, 48px);
+            font-weight: 700;
+            color: var(--primary-coral);
+            line-height: 1;
+        }
+
+        /* Answer section */
+        .answer-section {
+            background: var(--bg-soft);
+            border-radius: var(--radius-xl);
+            padding: 24px 32px;
+            box-shadow: 0 4px 24px var(--shadow-soft);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .answer-label {
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-soft);
+            text-align: center;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .answer-inputs {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        input[type="number"] {
+            width: 100px;
+            padding: 16px 12px;
+            border: 3px solid #E8E8E8;
+            border-radius: var(--radius-md);
+            font-family: 'Fredoka', sans-serif;
+            font-size: 36px;
+            font-weight: 600;
+            text-align: center;
+            color: var(--text-dark);
+            background: white;
+            transition: all 0.3s var(--transition-smooth);
+            -moz-appearance: textfield;
+            caret-color: transparent;
+            cursor: default;
+        }
+
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"]::selection {
+            background: transparent;
+        }
+
+        input[type="number"]:focus {
+            outline: none;
+            border-color: var(--primary-lavender);
+            box-shadow: 0 0 0 4px rgba(162, 155, 254, 0.3);
+        }
+
+        input[type="number"].correct {
+            border-color: var(--success-green);
+            background: #F0FFF4;
+        }
+
+        input[type="number"].incorrect {
+            border-color: var(--error-orange);
+            background: #FFF9F0;
+        }
+
+        .answer-divider {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-soft);
+        }
+
+        /* Buttons */
+        .buttons-row {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 100px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s var(--transition-smooth);
+            min-height: 50px;
+            min-width: 140px;
+        }
+
+        .btn-check {
+            background: var(--primary-coral);
+            color: white;
+            box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-check:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn-check:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-next {
+            background: var(--primary-lavender);
+            color: white;
+            box-shadow: 0 4px 16px rgba(162, 155, 254, 0.3);
+        }
+
+        .btn-next:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(162, 155, 254, 0.4);
+        }
+
+        .btn-next:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Feedback message */
+        .feedback {
+            text-align: center;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .feedback-message {
+            font-family: 'Fredoka', sans-serif;
+            font-size: clamp(18px, 3vw, 24px);
+            font-weight: 600;
+            padding: 12px 24px;
+            border-radius: var(--radius-lg);
+            animation: popIn 0.4s var(--transition-smooth);
+        }
+
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            50% { transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        .feedback-message.success {
+            background: #D4EDDA;
+            color: #155724;
+        }
+
+        .feedback-message.error {
+            background: #FFF3CD;
+            color: #856404;
+        }
+
+        /* Success animation */
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1) rotate(-5deg); }
+            75% { transform: scale(1.1) rotate(5deg); }
+        }
+
+        .celebrate {
+            animation: celebrate 0.5s ease-in-out;
+        }
+
+        /* Responsive */
+        @media (max-height: 650px) {
+            .app {
+                padding: 12px 20px;
+                gap: 12px;
+            }
+
+            .logo-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .score-card {
+                padding: 8px 20px;
+            }
+
+            .score-value {
+                font-size: 20px;
+            }
+
+            .problem-card {
+                padding: 20px 32px;
+            }
+
+            .problem-numerator,
+            .problem-denominator {
+                font-size: 36px;
+            }
+
+            .problem-line {
+                width: 60px;
+                height: 4px;
+            }
+
+            .problem-operator {
+                font-size: 32px;
+            }
+
+            .answer-section {
+                padding: 16px 24px;
+            }
+
+            input[type="number"] {
+                width: 80px;
+                padding: 12px 8px;
+                font-size: 28px;
+            }
+
+            .answer-divider {
+                font-size: 36px;
+            }
+
+            .btn {
+                padding: 12px 24px;
+                font-size: 14px;
+                min-height: 44px;
+            }
+
+            .feedback-message {
+                font-size: 18px;
+                padding: 10px 20px;
+            }
+
+            .home-btn {
+                padding: 8px 14px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .problem-card {
+                padding: 20px 24px;
+            }
+
+            .problem-expression {
+                gap: 12px;
+            }
+
+            .answer-section {
+                padding: 16px 20px;
+            }
+
+            input[type="number"] {
+                width: 70px;
+                padding: 10px 6px;
+                font-size: 24px;
+            }
+
+            .buttons-row {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <a href="index.html" class="home-btn">← Home</a>
+            <div class="logo">
+                <div class="logo-icon">➕</div>
+                <h1>Add Fractions</h1>
+            </div>
+        </header>
+
+        <section class="score-section">
+            <div class="score-card">
+                <span class="score-label">Score:</span>
+                <span class="score-value" id="score">0 of 0</span>
+            </div>
+        </section>
+
+        <main class="main-content">
+            <div class="problem-card" id="problemCard">
+                <div class="problem-label">Add these fractions</div>
+                <div class="problem-expression">
+                    <div class="problem-fraction">
+                        <span class="problem-numerator" id="problemNumerator1">1</span>
+                        <div class="problem-line"></div>
+                        <span class="problem-denominator" id="problemDenominator1">2</span>
+                    </div>
+                    <span class="problem-operator">+</span>
+                    <div class="problem-fraction">
+                        <span class="problem-numerator" id="problemNumerator2">1</span>
+                        <div class="problem-line"></div>
+                        <span class="problem-denominator" id="problemDenominator2">3</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="answer-section">
+                <div class="answer-label">Your answer (simplified)</div>
+                <div class="answer-inputs">
+                    <div class="input-wrapper">
+                        <input type="number" id="answerNumerator" min="1" max="99" placeholder="?">
+                    </div>
+                    <span class="answer-divider">/</span>
+                    <div class="input-wrapper">
+                        <input type="number" id="answerDenominator" min="1" max="99" placeholder="?">
+                    </div>
+                </div>
+                <div class="buttons-row">
+                    <button class="btn btn-check" id="checkBtn">Check</button>
+                    <button class="btn btn-next" id="nextBtn">Next</button>
+                </div>
+            </div>
+
+            <div class="feedback">
+                <div class="feedback-message" id="feedback" style="display: none;"></div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // State
+        let currentProblem = {
+            fraction1: { numerator: 0, denominator: 0 },
+            fraction2: { numerator: 0, denominator: 0 }
+        };
+        let correctAnswer = { numerator: 0, denominator: 0 };
+        let score = { correct: 0, total: 0 };
+        let hasAnsweredCorrectly = false;
+
+        // DOM elements
+        const elements = {
+            problemNumerator1: document.getElementById('problemNumerator1'),
+            problemDenominator1: document.getElementById('problemDenominator1'),
+            problemNumerator2: document.getElementById('problemNumerator2'),
+            problemDenominator2: document.getElementById('problemDenominator2'),
+            problemCard: document.getElementById('problemCard'),
+            answerNumerator: document.getElementById('answerNumerator'),
+            answerDenominator: document.getElementById('answerDenominator'),
+            checkBtn: document.getElementById('checkBtn'),
+            nextBtn: document.getElementById('nextBtn'),
+            feedback: document.getElementById('feedback'),
+            score: document.getElementById('score')
+        };
+
+        // GCD function using Euclidean algorithm
+        function gcd(a, b) {
+            a = Math.abs(a);
+            b = Math.abs(b);
+            while (b) {
+                const temp = b;
+                b = a % b;
+                a = temp;
+            }
+            return a;
+        }
+
+        // LCM function
+        function lcm(a, b) {
+            return Math.abs(a * b) / gcd(a, b);
+        }
+
+        // Simplify a fraction to lowest terms
+        function simplifyFraction(numerator, denominator) {
+            const divisor = gcd(numerator, denominator);
+            return {
+                numerator: numerator / divisor,
+                denominator: denominator / divisor
+            };
+        }
+
+        // Add two fractions and return simplified result
+        function addFractions(num1, den1, num2, den2) {
+            // Find common denominator
+            const commonDen = lcm(den1, den2);
+
+            // Convert both fractions to common denominator
+            const newNum1 = num1 * (commonDen / den1);
+            const newNum2 = num2 * (commonDen / den2);
+
+            // Add numerators
+            const sumNum = newNum1 + newNum2;
+
+            // Simplify the result
+            return simplifyFraction(sumNum, commonDen);
+        }
+
+        // Generate a random fraction addition problem
+        function generateProblem() {
+            // Keep denominators small and manageable (2-12)
+            // Keep numerators smaller than denominators for proper fractions
+
+            const den1 = Math.floor(Math.random() * 11) + 2; // 2-12
+            const num1 = Math.floor(Math.random() * (den1 - 1)) + 1; // 1 to (den-1)
+
+            const den2 = Math.floor(Math.random() * 11) + 2; // 2-12
+            const num2 = Math.floor(Math.random() * (den2 - 1)) + 1; // 1 to (den-1)
+
+            return {
+                fraction1: { numerator: num1, denominator: den1 },
+                fraction2: { numerator: num2, denominator: den2 }
+            };
+        }
+
+        // Start a new problem
+        function newProblem() {
+            hasAnsweredCorrectly = false;
+            currentProblem = generateProblem();
+
+            // Calculate correct answer
+            correctAnswer = addFractions(
+                currentProblem.fraction1.numerator,
+                currentProblem.fraction1.denominator,
+                currentProblem.fraction2.numerator,
+                currentProblem.fraction2.denominator
+            );
+
+            // Update UI
+            elements.problemNumerator1.textContent = currentProblem.fraction1.numerator;
+            elements.problemDenominator1.textContent = currentProblem.fraction1.denominator;
+            elements.problemNumerator2.textContent = currentProblem.fraction2.numerator;
+            elements.problemDenominator2.textContent = currentProblem.fraction2.denominator;
+
+            // Clear inputs
+            elements.answerNumerator.value = '';
+            elements.answerDenominator.value = '';
+            elements.answerNumerator.className = '';
+            elements.answerDenominator.className = '';
+
+            // Hide feedback
+            elements.feedback.style.display = 'none';
+
+            // Reset buttons
+            elements.checkBtn.disabled = false;
+            elements.nextBtn.disabled = true;
+
+            // Focus first input
+            elements.answerNumerator.focus();
+
+            // Remove celebration class
+            elements.problemCard.classList.remove('celebrate');
+        }
+
+        // Check the user's answer
+        function checkAnswer() {
+            if (hasAnsweredCorrectly) return;
+
+            const userNum = parseInt(elements.answerNumerator.value);
+            const userDen = parseInt(elements.answerDenominator.value);
+
+            // Validate input
+            if (isNaN(userNum) || isNaN(userDen) || userDen === 0) {
+                elements.feedback.textContent = 'Please enter valid numbers!';
+                elements.feedback.className = 'feedback-message error';
+                elements.feedback.style.display = 'block';
+                return;
+            }
+
+            // Simplify user's answer in case they didn't simplify
+            const userSimplified = simplifyFraction(userNum, userDen);
+
+            // Check if the answer is correct (comparing simplified forms)
+            const isCorrect = userSimplified.numerator === correctAnswer.numerator &&
+                             userSimplified.denominator === correctAnswer.denominator;
+
+            if (isCorrect) {
+                hasAnsweredCorrectly = true;
+                score.total++;
+                score.correct++;
+                elements.answerNumerator.className = 'correct';
+                elements.answerDenominator.className = 'correct';
+                elements.feedback.textContent = 'Correct! Great job!';
+                elements.feedback.className = 'feedback-message success';
+                elements.problemCard.classList.add('celebrate');
+                elements.checkBtn.disabled = true;
+                elements.nextBtn.disabled = false;
+                updateScore();
+            } else {
+                elements.answerNumerator.className = 'incorrect';
+                elements.answerDenominator.className = 'incorrect';
+                elements.feedback.textContent = 'Not quite! Try again!';
+                elements.feedback.className = 'feedback-message error';
+                // Clear inputs for another attempt
+                setTimeout(() => {
+                    elements.answerNumerator.value = '';
+                    elements.answerDenominator.value = '';
+                    elements.answerNumerator.className = '';
+                    elements.answerDenominator.className = '';
+                    elements.answerNumerator.focus();
+                }, 800);
+            }
+
+            elements.feedback.style.display = 'block';
+        }
+
+        // Update score display
+        function updateScore() {
+            elements.score.textContent = `${score.correct} of ${score.total}`;
+        }
+
+        // Event listeners
+        elements.checkBtn.addEventListener('click', checkAnswer);
+        elements.nextBtn.addEventListener('click', () => {
+            if (hasAnsweredCorrectly) {
+                newProblem();
+            }
+        });
+
+        // Allow Enter key to check/next
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                if (hasAnsweredCorrectly) {
+                    newProblem();
+                } else {
+                    checkAnswer();
+                }
+            }
+        });
+
+        // Track if we just focused an input (for Google Sheets-like behavior)
+        let justFocused = { numerator: false, denominator: false };
+
+        // Google Sheets-like input handling
+        function setupSheetsBehavior(input, inputKey) {
+            // When focusing, mark as just focused
+            input.addEventListener('focus', () => {
+                justFocused[inputKey] = true;
+            });
+
+            input.addEventListener('keydown', (e) => {
+                // Arrow keys and Tab to move between inputs
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || (e.key === 'Tab' && !e.shiftKey)) {
+                    e.preventDefault();
+                    elements.answerDenominator.focus();
+                    return;
+                }
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || (e.key === 'Tab' && e.shiftKey)) {
+                    e.preventDefault();
+                    elements.answerNumerator.focus();
+                    return;
+                }
+
+                // Backspace clears entire entry
+                if (e.key === 'Backspace') {
+                    e.preventDefault();
+                    input.value = '';
+                    justFocused[inputKey] = false;
+                    return;
+                }
+
+                // Delete clears entire entry
+                if (e.key === 'Delete') {
+                    e.preventDefault();
+                    input.value = '';
+                    justFocused[inputKey] = false;
+                    return;
+                }
+
+                // Number keys - if just focused, replace; otherwise append
+                if (e.key >= '0' && e.key <= '9') {
+                    e.preventDefault();
+                    if (justFocused[inputKey]) {
+                        input.value = e.key;
+                        justFocused[inputKey] = false;
+                    } else {
+                        // Limit to 3 digits
+                        if (input.value.length < 3) {
+                            input.value += e.key;
+                        }
+                    }
+                    return;
+                }
+
+                // Prevent all other keys except Enter (handled globally)
+                if (e.key !== 'Enter') {
+                    e.preventDefault();
+                }
+            });
+
+            // Clicking also marks as just focused
+            input.addEventListener('click', () => {
+                justFocused[inputKey] = true;
+            });
+        }
+
+        setupSheetsBehavior(elements.answerNumerator, 'numerator');
+        setupSheetsBehavior(elements.answerDenominator, 'denominator');
+
+        // Initialize
+        newProblem();
+    </script>
+</body>
+</html>
