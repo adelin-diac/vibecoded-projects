@@ -708,31 +708,14 @@
                 return;
             }
 
-            // Check if the answer is correct (must be in lowest terms AND equal to correct answer)
-            const isCorrect = userNum === correctAnswer.numerator &&
-                             userDen === correctAnswer.denominator;
-
-            // Also accept equivalent fractions that are fully simplified
+            // Simplify user's answer to check if it's mathematically correct
             const userSimplified = simplifyFraction(userNum, userDen);
-            const isEquivalentAndSimplified =
-                userSimplified.numerator === correctAnswer.numerator &&
-                userSimplified.denominator === correctAnswer.denominator &&
-                userNum === userSimplified.numerator &&
-                userDen === userSimplified.denominator;
 
-            if (isCorrect || isEquivalentAndSimplified) {
-                hasAnsweredCorrectly = true;
-                score.total++;
-                score.correct++;
-                elements.answerNumerator.className = 'correct';
-                elements.answerDenominator.className = 'correct';
-                elements.feedback.textContent = 'Correct! Great job!';
-                elements.feedback.className = 'feedback-message success';
-                elements.problemCard.classList.add('celebrate');
-                elements.checkBtn.disabled = true;
-                elements.nextBtn.disabled = false;
-                updateScore();
-            } else {
+            // Check if the answer is mathematically correct (comparing simplified forms)
+            const isMathematicallyCorrect = userSimplified.numerator === correctAnswer.numerator &&
+                                           userSimplified.denominator === correctAnswer.denominator;
+
+            if (!isMathematicallyCorrect) {
                 elements.answerNumerator.className = 'incorrect';
                 elements.answerDenominator.className = 'incorrect';
                 elements.feedback.textContent = 'Not quite! Try again!';
@@ -745,8 +728,43 @@
                     elements.answerDenominator.className = '';
                     elements.answerNumerator.focus();
                 }, 800);
+                elements.feedback.style.display = 'block';
+                return;
             }
 
+            // Check if the answer is in simplest form
+            const isInSimplestForm = userNum === userSimplified.numerator &&
+                                    userDen === userSimplified.denominator;
+
+            if (!isInSimplestForm) {
+                elements.answerNumerator.className = 'incorrect';
+                elements.answerDenominator.className = 'incorrect';
+                elements.feedback.textContent = 'Correct value, but please simplify your answer!';
+                elements.feedback.className = 'feedback-message error';
+                // Clear inputs for another attempt
+                setTimeout(() => {
+                    elements.answerNumerator.value = '';
+                    elements.answerDenominator.value = '';
+                    elements.answerNumerator.className = '';
+                    elements.answerDenominator.className = '';
+                    elements.answerNumerator.focus();
+                }, 800);
+                elements.feedback.style.display = 'block';
+                return;
+            }
+
+            // Answer is correct and simplified
+            hasAnsweredCorrectly = true;
+            score.total++;
+            score.correct++;
+            elements.answerNumerator.className = 'correct';
+            elements.answerDenominator.className = 'correct';
+            elements.feedback.textContent = 'Correct! Great job!';
+            elements.feedback.className = 'feedback-message success';
+            elements.problemCard.classList.add('celebrate');
+            elements.checkBtn.disabled = true;
+            elements.nextBtn.disabled = false;
+            updateScore();
             elements.feedback.style.display = 'block';
         }
 
