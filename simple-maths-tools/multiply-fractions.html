@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fraction Friends - Fraction of a Number</title>
+    <title>Fraction Friends - Multiply Fractions Practice</title>
     <link rel="icon" type="image/png" href="assets/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
     <link rel="shortcut icon" href="assets/favicon.ico" />
@@ -17,7 +17,7 @@
             --bg-soft: #FFFCF7;
             --primary-coral: #FF6B6B;
             --primary-mint: #4ECDC4;
-            --primary-sunny: #5B8DDE;
+            --primary-blue: #5B8DDE;
             --primary-lavender: #A29BFE;
             --primary-peach: #FFEAA7;
             --text-dark: #2D3436;
@@ -113,7 +113,7 @@
         .logo-icon {
             width: 44px;
             height: 44px;
-            background: var(--primary-sunny);
+            background: var(--primary-blue);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -164,7 +164,7 @@
             font-family: 'Fredoka', sans-serif;
             font-size: 24px;
             font-weight: 700;
-            color: var(--primary-sunny);
+            color: var(--primary-blue);
         }
 
         /* Main content */
@@ -208,7 +208,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 16px;
+            gap: 20px;
         }
 
         .problem-fraction {
@@ -234,19 +234,11 @@
             border-radius: 3px;
         }
 
-        .problem-of {
+        .problem-operator {
             font-family: 'Fredoka', sans-serif;
-            font-size: clamp(24px, 4vw, 32px);
+            font-size: clamp(36px, 6vw, 48px);
             font-weight: 700;
-            color: var(--text-soft);
-            line-height: 1;
-        }
-
-        .problem-number {
-            font-family: 'Fredoka', sans-serif;
-            font-size: clamp(48px, 8vw, 72px);
-            font-weight: 700;
-            color: var(--primary-sunny);
+            color: var(--primary-blue);
             line-height: 1;
         }
 
@@ -279,13 +271,20 @@
             gap: 16px;
         }
 
+        .input-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
         input[type="number"] {
-            width: 140px;
+            width: 100px;
             padding: 16px 12px;
             border: 3px solid #E8E8E8;
             border-radius: var(--radius-md);
             font-family: 'Fredoka', sans-serif;
-            font-size: 48px;
+            font-size: 36px;
             font-weight: 600;
             text-align: center;
             color: var(--text-dark);
@@ -322,6 +321,13 @@
             background: #FFF9F0;
         }
 
+        .answer-divider {
+            font-family: 'Fredoka', sans-serif;
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--text-soft);
+        }
+
         /* Buttons */
         .buttons-row {
             display: flex;
@@ -348,14 +354,14 @@
         }
 
         .btn-check {
-            background: var(--primary-sunny);
-            color: var(--text-dark);
-            box-shadow: 0 4px 16px rgba(255, 230, 109, 0.3);
+            background: var(--primary-blue);
+            color: white;
+            box-shadow: 0 4px 16px rgba(91, 141, 222, 0.3);
         }
 
         .btn-check:hover {
             transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(255, 230, 109, 0.4);
+            box-shadow: 0 6px 20px rgba(91, 141, 222, 0.4);
         }
 
         .btn-check:disabled {
@@ -465,12 +471,8 @@
                 height: 4px;
             }
 
-            .problem-of {
-                font-size: 24px;
-            }
-
-            .problem-number {
-                font-size: 48px;
+            .problem-operator {
+                font-size: 32px;
             }
 
             .answer-section {
@@ -478,8 +480,12 @@
             }
 
             input[type="number"] {
-                width: 100px;
+                width: 80px;
                 padding: 12px 8px;
+                font-size: 28px;
+            }
+
+            .answer-divider {
                 font-size: 36px;
             }
 
@@ -507,7 +513,6 @@
 
             .problem-expression {
                 gap: 12px;
-                flex-wrap: wrap;
             }
 
             .answer-section {
@@ -515,9 +520,9 @@
             }
 
             input[type="number"] {
-                width: 90px;
+                width: 70px;
                 padding: 10px 6px;
-                font-size: 32px;
+                font-size: 24px;
             }
 
             .buttons-row {
@@ -537,7 +542,7 @@
             <a href="index.html" class="home-btn">← Home</a>
             <div class="logo">
                 <div class="logo-icon">✖️</div>
-                <h1>Fraction of a Number</h1>
+                <h1>Multiply Fractions</h1>
             </div>
         </header>
 
@@ -550,22 +555,32 @@
 
         <main class="main-content">
             <div class="problem-card" id="problemCard">
-                <div class="problem-label">Find the answer</div>
+                <div class="problem-label">Multiply these fractions</div>
                 <div class="problem-expression">
                     <div class="problem-fraction">
-                        <span class="problem-numerator" id="problemNumerator">2</span>
+                        <span class="problem-numerator" id="problemNumerator1">1</span>
                         <div class="problem-line"></div>
-                        <span class="problem-denominator" id="problemDenominator">3</span>
+                        <span class="problem-denominator" id="problemDenominator1">2</span>
                     </div>
-                    <span class="problem-of">of</span>
-                    <span class="problem-number" id="problemNumber">9</span>
+                    <span class="problem-operator">×</span>
+                    <div class="problem-fraction">
+                        <span class="problem-numerator" id="problemNumerator2">1</span>
+                        <div class="problem-line"></div>
+                        <span class="problem-denominator" id="problemDenominator2">3</span>
+                    </div>
                 </div>
             </div>
 
             <div class="answer-section">
-                <div class="answer-label">Your answer</div>
+                <div class="answer-label">Your answer (simplified)</div>
                 <div class="answer-inputs">
-                    <input type="number" id="answerInput" min="0" max="999" placeholder="?">
+                    <div class="input-wrapper">
+                        <input type="number" id="answerNumerator" min="1" max="99" placeholder="?">
+                    </div>
+                    <span class="answer-divider">/</span>
+                    <div class="input-wrapper">
+                        <input type="number" id="answerDenominator" min="1" max="99" placeholder="?">
+                    </div>
                 </div>
                 <div class="buttons-row">
                     <button class="btn btn-check" id="checkBtn">Check</button>
@@ -581,18 +596,23 @@
 
     <script>
         // State
-        let currentProblem = { numerator: 0, denominator: 0, number: 0 };
-        let correctAnswer = 0;
+        let currentProblem = {
+            fraction1: { numerator: 0, denominator: 0 },
+            fraction2: { numerator: 0, denominator: 0 }
+        };
+        let correctAnswer = { numerator: 0, denominator: 0 };
         let score = { correct: 0, total: 0 };
         let hasAnsweredCorrectly = false;
 
         // DOM elements
         const elements = {
-            problemNumerator: document.getElementById('problemNumerator'),
-            problemDenominator: document.getElementById('problemDenominator'),
-            problemNumber: document.getElementById('problemNumber'),
+            problemNumerator1: document.getElementById('problemNumerator1'),
+            problemDenominator1: document.getElementById('problemDenominator1'),
+            problemNumerator2: document.getElementById('problemNumerator2'),
+            problemDenominator2: document.getElementById('problemDenominator2'),
             problemCard: document.getElementById('problemCard'),
-            answerInput: document.getElementById('answerInput'),
+            answerNumerator: document.getElementById('answerNumerator'),
+            answerDenominator: document.getElementById('answerDenominator'),
             checkBtn: document.getElementById('checkBtn'),
             nextBtn: document.getElementById('nextBtn'),
             feedback: document.getElementById('feedback'),
@@ -611,114 +631,64 @@
             return a;
         }
 
-        // Generate a problem with integer answer
-        // Strategy: Pick a fraction and ensure the whole number is divisible by the denominator
+        // Simplify a fraction to lowest terms
+        function simplifyFraction(numerator, denominator) {
+            const divisor = gcd(numerator, denominator);
+            return {
+                numerator: numerator / divisor,
+                denominator: denominator / divisor
+            };
+        }
+
+        // Multiply two fractions and return simplified result
+        function multiplyFractions(num1, den1, num2, den2) {
+            // Multiply numerators and denominators
+            const resultNum = num1 * num2;
+            const resultDen = den1 * den2;
+
+            // Simplify the result
+            return simplifyFraction(resultNum, resultDen);
+        }
+
+        // Generate a random fraction multiplication problem
         function generateProblem() {
-            let numerator, denominator, number, answer;
-            let attempts = 0;
-            const maxAttempts = 100;
+            // Keep denominators and numerators between 1-12
+            const den1 = Math.floor(Math.random() * 12) + 1; // 1-12
+            const num1 = Math.floor(Math.random() * 12) + 1; // 1-12
 
-            do {
-                // Generate fraction with numerator and denominator up to 12
-                denominator = Math.floor(Math.random() * 12) + 1; // 1-12
-                numerator = Math.floor(Math.random() * 12) + 1; // 1-12
+            const den2 = Math.floor(Math.random() * 12) + 1; // 1-12
+            const num2 = Math.floor(Math.random() * 12) + 1; // 1-12
 
-                // Ensure numerator < denominator for proper fractions (more intuitive for kids)
-                if (numerator >= denominator) {
-                    continue;
-                }
-
-                // Simplify the fraction to avoid redundant problems like 2/4 vs 1/2
-                const divisor = gcd(numerator, denominator);
-                numerator = numerator / divisor;
-                denominator = denominator / divisor;
-
-                // Generate a whole number that when multiplied by numerator/denominator gives an integer
-                // The number must be a multiple of the denominator
-                // Pick a multiplier from 1 to (144 / denominator) to keep numbers reasonable
-                const maxMultiplier = Math.min(12, Math.floor(144 / denominator));
-                if (maxMultiplier < 1) continue;
-
-                const multiplier = Math.floor(Math.random() * maxMultiplier) + 1;
-                number = denominator * multiplier;
-
-                // Calculate the answer
-                answer = (numerator * number) / denominator;
-
-                // Ensure answer is a positive integer and not too large
-                if (Number.isInteger(answer) && answer > 0 && answer <= 144) {
-                    break;
-                }
-
-                attempts++;
-            } while (attempts < maxAttempts);
-
-            // Fallback to known good problems if generation fails
-            if (attempts >= maxAttempts || !Number.isInteger(answer) || answer <= 0 || answer > 144) {
-                const knownProblems = [
-                    { num: 1, den: 2, number: 10, answer: 5 },
-                    { num: 1, den: 3, number: 9, answer: 3 },
-                    { num: 2, den: 3, number: 9, answer: 6 },
-                    { num: 1, den: 4, number: 12, answer: 3 },
-                    { num: 3, den: 4, number: 12, answer: 9 },
-                    { num: 1, den: 5, number: 10, answer: 2 },
-                    { num: 2, den: 5, number: 10, answer: 4 },
-                    { num: 3, den: 5, number: 15, answer: 9 },
-                    { num: 4, den: 5, number: 15, answer: 12 },
-                    { num: 1, den: 6, number: 12, answer: 2 },
-                    { num: 5, den: 6, number: 12, answer: 10 },
-                    { num: 1, den: 8, number: 16, answer: 2 },
-                    { num: 3, den: 8, number: 16, answer: 6 },
-                    { num: 5, den: 8, number: 24, answer: 15 },
-                    { num: 7, den: 8, number: 24, answer: 21 },
-                    { num: 1, den: 10, number: 20, answer: 2 },
-                    { num: 3, den: 10, number: 30, answer: 9 },
-                    { num: 7, den: 10, number: 40, answer: 28 },
-                    { num: 9, den: 10, number: 50, answer: 45 },
-                    { num: 1, den: 12, number: 24, answer: 2 },
-                    { num: 5, den: 12, number: 36, answer: 15 },
-                    { num: 7, den: 12, number: 48, answer: 28 },
-                    { num: 11, den: 12, number: 60, answer: 55 },
-                    { num: 2, den: 7, number: 21, answer: 6 },
-                    { num: 3, den: 7, number: 28, answer: 12 },
-                    { num: 5, den: 7, number: 35, answer: 25 },
-                    { num: 2, den: 9, number: 18, answer: 4 },
-                    { num: 4, den: 9, number: 27, answer: 12 },
-                    { num: 5, den: 9, number: 36, answer: 20 },
-                    { num: 7, den: 9, number: 45, answer: 35 },
-                    { num: 1, den: 11, number: 33, answer: 3 },
-                    { num: 2, den: 11, number: 44, answer: 8 },
-                    { num: 3, den: 11, number: 55, answer: 15 }
-                ];
-                const problem = knownProblems[Math.floor(Math.random() * knownProblems.length)];
-                numerator = problem.num;
-                denominator = problem.den;
-                number = problem.number;
-                answer = problem.answer;
-            }
-
-            return { numerator, denominator, number, answer };
+            return {
+                fraction1: { numerator: num1, denominator: den1 },
+                fraction2: { numerator: num2, denominator: den2 }
+            };
         }
 
         // Start a new problem
         function newProblem() {
             hasAnsweredCorrectly = false;
-            const problem = generateProblem();
-            currentProblem = {
-                numerator: problem.numerator,
-                denominator: problem.denominator,
-                number: problem.number
-            };
-            correctAnswer = problem.answer;
+            currentProblem = generateProblem();
+
+            // Calculate correct answer
+            correctAnswer = multiplyFractions(
+                currentProblem.fraction1.numerator,
+                currentProblem.fraction1.denominator,
+                currentProblem.fraction2.numerator,
+                currentProblem.fraction2.denominator
+            );
 
             // Update UI
-            elements.problemNumerator.textContent = currentProblem.numerator;
-            elements.problemDenominator.textContent = currentProblem.denominator;
-            elements.problemNumber.textContent = currentProblem.number;
+            elements.problemNumerator1.textContent = currentProblem.fraction1.numerator;
+            elements.problemDenominator1.textContent = currentProblem.fraction1.denominator;
+            elements.problemNumerator2.textContent = currentProblem.fraction2.numerator;
+            elements.problemDenominator2.textContent = currentProblem.fraction2.denominator;
 
-            // Clear input
-            elements.answerInput.value = '';
-            elements.answerInput.className = '';
+            // Clear inputs
+            elements.answerNumerator.value = '';
+            elements.answerDenominator.value = '';
+            elements.answerNumerator.className = '';
+            elements.answerDenominator.className = '';
 
             // Hide feedback
             elements.feedback.style.display = 'none';
@@ -727,8 +697,8 @@
             elements.checkBtn.disabled = false;
             elements.nextBtn.disabled = true;
 
-            // Focus input
-            elements.answerInput.focus();
+            // Focus first input
+            elements.answerNumerator.focus();
 
             // Remove celebration class
             elements.problemCard.classList.remove('celebrate');
@@ -738,24 +708,30 @@
         function checkAnswer() {
             if (hasAnsweredCorrectly) return;
 
-            const userAnswer = parseInt(elements.answerInput.value);
+            const userNum = parseInt(elements.answerNumerator.value);
+            const userDen = parseInt(elements.answerDenominator.value);
 
             // Validate input
-            if (isNaN(userAnswer)) {
-                elements.feedback.textContent = 'Please enter a valid number!';
+            if (isNaN(userNum) || isNaN(userDen) || userDen === 0) {
+                elements.feedback.textContent = 'Please enter valid numbers!';
                 elements.feedback.className = 'feedback-message error';
                 elements.feedback.style.display = 'block';
                 return;
             }
 
-            // Check if the answer is correct
-            const isCorrect = userAnswer === correctAnswer;
+            // Simplify user's answer in case they didn't simplify
+            const userSimplified = simplifyFraction(userNum, userDen);
+
+            // Check if the answer is correct (comparing simplified forms)
+            const isCorrect = userSimplified.numerator === correctAnswer.numerator &&
+                             userSimplified.denominator === correctAnswer.denominator;
 
             if (isCorrect) {
                 hasAnsweredCorrectly = true;
                 score.total++;
                 score.correct++;
-                elements.answerInput.className = 'correct';
+                elements.answerNumerator.className = 'correct';
+                elements.answerDenominator.className = 'correct';
                 elements.feedback.textContent = 'Correct! Great job!';
                 elements.feedback.className = 'feedback-message success';
                 elements.problemCard.classList.add('celebrate');
@@ -763,14 +739,17 @@
                 elements.nextBtn.disabled = false;
                 updateScore();
             } else {
-                elements.answerInput.className = 'incorrect';
+                elements.answerNumerator.className = 'incorrect';
+                elements.answerDenominator.className = 'incorrect';
                 elements.feedback.textContent = 'Not quite! Try again!';
                 elements.feedback.className = 'feedback-message error';
-                // Clear input for another attempt
+                // Clear inputs for another attempt
                 setTimeout(() => {
-                    elements.answerInput.value = '';
-                    elements.answerInput.className = '';
-                    elements.answerInput.focus();
+                    elements.answerNumerator.value = '';
+                    elements.answerDenominator.value = '';
+                    elements.answerNumerator.className = '';
+                    elements.answerDenominator.className = '';
+                    elements.answerNumerator.focus();
                 }, 800);
             }
 
@@ -801,56 +780,74 @@
             }
         });
 
-        // Track if we just focused the input (for Google Sheets-like behavior)
-        let justFocused = false;
+        // Track if we just focused an input (for Google Sheets-like behavior)
+        let justFocused = { numerator: false, denominator: false };
 
         // Google Sheets-like input handling
-        elements.answerInput.addEventListener('focus', () => {
-            justFocused = true;
-        });
+        function setupSheetsBehavior(input, inputKey) {
+            // When focusing, mark as just focused
+            input.addEventListener('focus', () => {
+                justFocused[inputKey] = true;
+            });
 
-        elements.answerInput.addEventListener('keydown', (e) => {
-            // Backspace clears entire entry
-            if (e.key === 'Backspace') {
-                e.preventDefault();
-                elements.answerInput.value = '';
-                justFocused = false;
-                return;
-            }
-
-            // Delete clears entire entry
-            if (e.key === 'Delete') {
-                e.preventDefault();
-                elements.answerInput.value = '';
-                justFocused = false;
-                return;
-            }
-
-            // Number keys - if just focused, replace; otherwise append
-            if (e.key >= '0' && e.key <= '9') {
-                e.preventDefault();
-                if (justFocused) {
-                    elements.answerInput.value = e.key;
-                    justFocused = false;
-                } else {
-                    // Limit to 3 digits
-                    if (elements.answerInput.value.length < 3) {
-                        elements.answerInput.value += e.key;
-                    }
+            input.addEventListener('keydown', (e) => {
+                // Arrow keys and Tab to move between inputs
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || (e.key === 'Tab' && !e.shiftKey)) {
+                    e.preventDefault();
+                    elements.answerDenominator.focus();
+                    return;
                 }
-                return;
-            }
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || (e.key === 'Tab' && e.shiftKey)) {
+                    e.preventDefault();
+                    elements.answerNumerator.focus();
+                    return;
+                }
 
-            // Prevent all other keys except Enter (handled globally)
-            if (e.key !== 'Enter') {
-                e.preventDefault();
-            }
-        });
+                // Backspace clears entire entry
+                if (e.key === 'Backspace') {
+                    e.preventDefault();
+                    input.value = '';
+                    justFocused[inputKey] = false;
+                    return;
+                }
 
-        // Clicking also marks as just focused
-        elements.answerInput.addEventListener('click', () => {
-            justFocused = true;
-        });
+                // Delete clears entire entry
+                if (e.key === 'Delete') {
+                    e.preventDefault();
+                    input.value = '';
+                    justFocused[inputKey] = false;
+                    return;
+                }
+
+                // Number keys - if just focused, replace; otherwise append
+                if (e.key >= '0' && e.key <= '9') {
+                    e.preventDefault();
+                    if (justFocused[inputKey]) {
+                        input.value = e.key;
+                        justFocused[inputKey] = false;
+                    } else {
+                        // Limit to 3 digits
+                        if (input.value.length < 3) {
+                            input.value += e.key;
+                        }
+                    }
+                    return;
+                }
+
+                // Prevent all other keys except Enter (handled globally)
+                if (e.key !== 'Enter') {
+                    e.preventDefault();
+                }
+            });
+
+            // Clicking also marks as just focused
+            input.addEventListener('click', () => {
+                justFocused[inputKey] = true;
+            });
+        }
+
+        setupSheetsBehavior(elements.answerNumerator, 'numerator');
+        setupSheetsBehavior(elements.answerDenominator, 'denominator');
 
         // Initialize
         newProblem();
