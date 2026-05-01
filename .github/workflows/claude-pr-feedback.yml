@@ -1,0 +1,54 @@
+name: Claude PR Feedback
+
+on:
+  issue_comment:
+    types: [created]
+
+jobs:
+  claude-update-pr:
+    if: |
+      github.event.issue.pull_request &&
+      github.event.comment.user.login == 'adelin-diac' &&
+      startsWith(github.event.comment.body, '/claude')
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+      id-token: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Checkout PR branch
+        run: |
+          PR_NUMBER=${{ github.event.issue.number }}
+          gh pr checkout $PR_NUMBER
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Claude updates PR based on feedback
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: |
+            --allowedTools "Bash(gh:*)" "Bash(git:*)" "Read" "Write" "Edit" "Glob" "Grep"
+          prompt: |
+            You are updating an existing pull request based on reviewer feedback.
+
+            Pull request: #${{ github.event.issue.number }}
+
+            Reviewer comment:
+            ---
+            ${{ github.event.comment.body }}
+            ---
+
+            Instructions:
+            1. Apply the requested changes
+            2. Do NOT create a new PR
+            3. Commit changes to the current branch
+            4. Push the updates so the existing PR is updated
